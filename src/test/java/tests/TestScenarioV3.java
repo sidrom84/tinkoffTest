@@ -1,5 +1,6 @@
 package tests;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -57,20 +58,25 @@ public class TestScenarioV3 {
         providerPage = new ProviderPage(selenium);
 
 //        1 Переходом по адресу http://///..tink.ff/ загрузить стартовую страницу Titink ati.
+        System.out.println("Переходим на главную страницу");
         selenium.navigate().to(baseURL);
         new WebDriverWait(selenium, 3).until(ExpectedConditions.titleIs("Кредит наличными и кредитные карты онлайн"));
         selenium.manage().window().maximize();
 
 //        2 Из верхнего меню, нажатием на пункт меню “Платежи“, перейти на страницу “Платежи“.
+        System.out.println("Нажимаем на пункт меню Платежи");
         commonObjects.clickMenuItem(menuItem);
 
 //        3 В списке категорий платежей, нажатием на пункт “Коммунальные платежи“, перейти на страницу выбора поставщиков услуг.
+        System.out.println("Выбираем тип Платежа");
         paymentPage.clickPaymentType(paymentType);
 
 //        4 Убедиться, что текущий регион – “г. Москва” (в противном случае выбрать регион “г. Москва” из списка регионов).
+        System.out.println("Выбираем требуемый Регион, если он уже не установлен");
         paymentPage.setRegion(regionsToSet[position], regionsToCheck[position]);
 
 //        5 Со страницы выбора поставщиков услуг, выбрать 1-ый из списка (Должен быть “ЖКУ-Москва”). Сохранить его наименование (далее “искомый”) и нажатием на соответствующий элемент перейти на страницу оплаты “ЖКУ-Москва“.
+        System.out.println("Выбираем требуемый Провайдера, первого из списка, проверяем");
         paymentPage.checkFirstProvider(zhkhName);
 
         //сохраняем Наименование
@@ -80,30 +86,63 @@ public class TestScenarioV3 {
         paymentPage.navigateToZhkhPage(zhkhName);
 
 //        6 На странице оплаты, перейти на вкладку “Оплатить ЖКУ в Москве“.
+        System.out.println("Переходим на страницу Оплаты, выбираем требуемую вкладку");
         providerPage.selectTab(zhkuPaymentTabName);
 
     }
 
 
-    @Test
-    public void testCheckValidnost() throws InterruptedException {
-
-
-
-
-//        zhkhPaymentTitleContainer[1]
-
-
 //        7 Выполнить проверки на невалидные значения для обязательных полей: проверить все текстовые сообщения об ошибке (и их содержимое), которые появляются под соответствующим полем ввода в результате ввода некорректных данных.
+    //обязательных полей три, каждое поле проверяется отдельно
+    @Test(dataProviderClass = ProviderPage.class, dataProvider = "dataCheckPayerCodeInputValidnost")
+    public void testCheckPayerCodeInputValidnost(String text, String value, String messageText) {
+        //проверяем поле Код
+        System.out.println("Проверяем поле Код плательщика");
+
+        By elementInput = providerPage.payerCodeInput;
+        Byte positionInput = 0;
+
+        providerPage.checkValidity(elementInput, positionInput, text, value, messageText);
+
     }
 
 
-    @Test(dependsOnMethods = {"testCheckValidnost"})
+    @Test(dataProviderClass = ProviderPage.class, dataProvider = "dataCheckPeriodInputValidnost")
+    public void testCheckPeriodInputValidnost(String text, String value, String messageText) {
+        //проверяем поле Период
+        System.out.println("Проверяем поле Период");
+
+        By elementInput = providerPage.periodInput;
+        Byte positionInput = 1;
+
+        providerPage.checkValidity(elementInput, positionInput, text, value, messageText);
+
+    }
+
+
+    @Test(dataProviderClass = ProviderPage.class, dataProvider = "dataCheckCombinationInputValidnost")
+    public void testCheckCombinationInputValidnost(String text, String value, String messageText) throws InterruptedException {
+        //проверяем поле Сумма
+        System.out.println("Проверяем поле Сумма платежа");
+
+        By elementInput = providerPage.combinationInput;
+        Byte positionInput = 2;
+
+        providerPage.checkValidity(elementInput, positionInput, text, value, messageText);
+
+    }
+
+
+    @Test(dependsOnMethods = {
+            "testCheckPayerCodeInputValidnost",
+            "testCheckPeriodInputValidnost",
+            "testCheckCombinationInputValidnost"})
     public void testCheckSearchResults(){
+        System.out.println("Проверяем поиск по Поставщику и результаты поиска");
 
 //        8 Повторить шаг (2).
 //        2 Из верхнего меню, нажатием на пункт меню “Платежи“, перейти на страницу “Платежи“.
-        commonObjects.clickMenuItem("Платежи");
+        commonObjects.clickMenuItem(menuItem);
 
 //        9 В строке быстрого поиска поставщика услуг ввести наименование искомого (ранее сохраненного).
 //        10 Убедиться, что в списке предложенных провайдеров искомый поставщик первый.
@@ -115,12 +154,13 @@ public class TestScenarioV3 {
 
     @Test(dependsOnMethods = {"testCheckSearchResults"})
     public void testCheckInAnotherRegion(){
+        System.out.println("Проверяем отсутствие искомого Поставщика при смене Региона");
 //        12 Выполнить шаги (2) и (3).
 //        2 Из верхнего меню, нажатием на пункт меню “Платежи“, перейти на страницу “Платежи“.
 //        3 В списке категорий платежей, нажатием на пункт “Коммунальные платежи“, перейти на страницу выбора поставщиков услуг.
-        commonObjects.clickMenuItem("Платежи");
+        commonObjects.clickMenuItem(menuItem);
 
-        paymentPage.clickPaymentType("ЖКХ");
+        paymentPage.clickPaymentType(paymentType);
 
 //        13 В списке регионов выбрать “г. Санкт-Петербург”.
         position = 1;
