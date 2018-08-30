@@ -121,7 +121,7 @@ public class TestScenarioV3 {
 
 
     @Test(dataProviderClass = ProviderPage.class, dataProvider = "dataCheckCombinationInputValidnost")
-    public void testCheckCombinationInputValidnost(String text, String value, String messageText) throws InterruptedException {
+    public void testCheckValidnost(String text, String value, String messageText) {
         //проверяем поле Сумма
         System.out.println("Проверяем поле Сумма платежа");
 
@@ -136,7 +136,7 @@ public class TestScenarioV3 {
     @Test(dependsOnMethods = {
             "testCheckPayerCodeInputValidnost",
             "testCheckPeriodInputValidnost",
-            "testCheckCombinationInputValidnost"})
+            "testCheckValidnost"})
     public void testCheckSearchResults(){
         System.out.println("Проверяем поиск по Поставщику и результаты поиска");
 
