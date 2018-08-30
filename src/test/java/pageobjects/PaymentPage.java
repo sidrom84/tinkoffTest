@@ -16,8 +16,8 @@ public class PaymentPage {
     private WebDriver selenium;
 
     String paymentType;
-    String[] regionsToSet   = new String[]{"г. Москва", "г. Санкт-Петербург"};
-    String[] regionsToCheck = new String[]{"Москве", "Санкт-Петербурге"};
+    String[] regionsToSet = new String[]{"Рі. РњРѕСЃРєРІР°", "Рі. РЎР°РЅРєС‚-РџРµС‚РµСЂР±СѓСЂРі"};
+    String[] regionsToCheck = new String[]{"РњРѕСЃРєРІРµ", "РЎР°РЅРєС‚-РџРµС‚РµСЂР±СѓСЂРіРµ"};
     Byte position = 0;
     String zhkhLookingForName = "";
 
@@ -37,8 +37,10 @@ public class PaymentPage {
     }
 
 
-    public void clickPaymentType(String paymentType){
-        //выбираем за что будем платить сегодня
+    public void clickPaymentType(String paymentType) {
+        //РІС‹Р±РёСЂР°РµРј Р·Р° С‡С‚Рѕ Р±СѓРґРµРј РїР»Р°С‚РёС‚СЊ СЃРµРіРѕРґРЅСЏ
+        // paymentType - С‚РёРї РїР»Р°С‚РµР¶Р°
+
         zhkhLink = By.xpath("//div[@data-qa-file='PaymentsCategories']/..//div[text()='" + paymentType + "']");
 
         new WebDriverWait(selenium, 3).until(ExpectedConditions.elementToBeClickable(zhkhLink));
@@ -47,17 +49,20 @@ public class PaymentPage {
     }
 
 
-    public void setRegion(String regionToSetName, String regionToCheckName){
+    public void setRegion(String regionToSetName, String regionToCheckName) {
+        //СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј Р РµРіРёРѕРЅ Рё РїСЂРѕРІРµСЂСЏРµРј СЂРµР·СѓР»СЊС‚Р°С‚
+        // regionToSetName - Р РµРіРёРѕРЅ, РєРѕС‚РѕСЂС‹Р№ Р±СѓРґРµРј СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊ
+        // regionToCheckName - Р РµРіРёРѕРЅ, РєРѕС‚РѕСЂС‹Р№ Р±СѓРґРµРј РїСЂРѕРІРµСЂСЏС‚СЊ, РѕС‚Р»РёС‡Р°РµС‚СЃСЏ РїР°РґРµР¶РЅРѕРµ РѕРєРѕРЅС‡Р°РЅРёРµ
 
         new WebDriverWait(selenium, 3).until(ExpectedConditions.elementToBeClickable(regionSelectLink));
 
-        //если не тот регион, то меняем на тот
+        //РµСЃР»Рё РЅРµ С‚РѕС‚ СЂРµРіРёРѕРЅ, С‚Рѕ РјРµРЅСЏРµРј РЅР° С‚РѕС‚
         if (!selenium.findElement(regionSelectLink).getText().equals(regionToCheckName)) {
 
-            //переходим на страницу выбора Региона
+            //РїРµСЂРµС…РѕРґРёРј РЅР° СЃС‚СЂР°РЅРёС†Сѓ РІС‹Р±РѕСЂР° Р РµРіРёРѕРЅР°
             selenium.findElement(regionSelectLink).click();
 
-            //так как требуется выбрать Регион из списка, выбираем из списка
+            //С‚Р°Рє РєР°Рє С‚СЂРµР±СѓРµС‚СЃСЏ РІС‹Р±СЂР°С‚СЊ Р РµРіРёРѕРЅ РёР· СЃРїРёСЃРєР°, РІС‹Р±РёСЂР°РµРј РёР· СЃРїРёСЃРєР°
             regionSetLink = By.xpath("//div[@data-qa-file='UIPopupRegions']/..//span[text()='" + regionToSetName + "']");
             new WebDriverWait(selenium, 3).until(ExpectedConditions.elementToBeClickable(regionSetLink));
             selenium.findElement(regionSetLink).click();
@@ -65,22 +70,24 @@ public class PaymentPage {
             new WebDriverWait(selenium, 3).until(ExpectedConditions.elementToBeClickable(regionSelectLink));
 
         }
-        //проверяем, что установлен требуемый регион
+        //РїСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅ С‚СЂРµР±СѓРµРјС‹Р№ СЂРµРіРёРѕРЅ
         new WebDriverWait(selenium, 3).until(ExpectedConditions.textToBe(regionSelectLink, regionToCheckName));
 
     }
 
 
-    public void checkFirstProvider(String firstProviderName){
-        //проверяем первого Поставщика услуг
+    public void checkFirstProvider(String firstProviderName) {
+        //РїСЂРѕРІРµСЂСЏРµРј РїРµСЂРІРѕРіРѕ РџРѕСЃС‚Р°РІС‰РёРєР° СѓСЃР»СѓРі
+        // firstProviderName - РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РџРѕСЃС‚Р°РІС‰РёРєР° СѓСЃР»СѓРі, РєРѕС‚РѕСЂС‹Р№ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РїРµСЂРІС‹Рј РІ СЃРїРёСЃРєРµ
+
         new WebDriverWait(selenium, 3).until(ExpectedConditions.elementToBeClickable(providersListFirstItem));
         Assert.assertEquals(selenium.findElement(providersListFirstItem).getText(), firstProviderName);
 
     }
 
 
-    public String zhkhLookingForName(){
-        //сохраняем название искомого
+    public String zhkhLookingForName() {
+        //СЃРѕС…СЂР°РЅСЏРµРј РЅР°Р·РІР°РЅРёРµ РёСЃРєРѕРјРѕРіРѕ
         zhkhLookingForName = selenium.findElement(providersListFirstItem).getText();
 
         return zhkhLookingForName;
@@ -88,35 +95,41 @@ public class PaymentPage {
     }
 
 
-    public void navigateToZhkhPage(String zhkhName){
-        //переходим на страницу Поставшика из списка Поставшиков
+    public void navigateToZhkhPage(String zhkhName) {
+        //РїРµСЂРµС…РѕРґРёРј РЅР° СЃС‚СЂР°РЅРёС†Сѓ РџРѕСЃС‚Р°РІС€РёРєР° РёР· СЃРїРёСЃРєР° РџРѕСЃС‚Р°РІС€РёРєРѕРІ
+        // zhkhName - РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РџРѕСЃС‚Р°РІС‰РёРєР° СѓСЃР»СѓРі, Рє РєРѕС‚РѕСЂРѕРјСѓ РёРґС‚Рё
+
         selenium.findElement(providersListFirstItem).click();
         new WebDriverWait(selenium, 3).until(ExpectedConditions.titleContains(zhkhName));
 
     }
 
 
-    public void searchZhkh(String request, Boolean pressEnter, Boolean checkPresence, Boolean click){
+    public void searchZhkh(String request, Boolean pressEnter, Boolean checkPresence, Boolean click) {
+        //РІС‹РїРѕР»РЅСЏРµРј РїРѕРёСЃРє С‚СЂСѓР±РµРјРѕРіРѕ РџРѕСЃС‚Р°РІС‰РёРєР°
+        // request - РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РџРѕСЃС‚Р°РІС‰РёРєР° СѓСЃР»СѓРі, РєРѕС‚РѕСЂРѕРіРѕ РёС‰РµРј
+        // pressEnter - РЅР°Р¶РёРјР°С‚СЊ РєРЅРѕРїРєСѓ ENTER РёР»Рё РЅРµС‚, РѕРєР°Р·Р°Р»РѕСЃСЊ РЅРµ РѕС‡РµРЅСЊ РЅСѓР¶РЅРѕ
+        // checkPresence - РїСЂРѕРІРµСЂСЏС‚СЊ РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ РІС‹РїР°РґР°СЋС‰РµРіРѕ СЃРїРёСЃРєР° Рё РЅР°Р»РёС‡РёРµ РЅР°РёРјРµРЅРѕРІР°РЅРёСЏ РџРѕСЃС‚Р°РІС‰РёРєР° СѓСЃР»СѓРі
+        // click - РєР»РёРєР°С‚СЊ РїРѕ РЅР°РёРјРµРЅРѕРІР°РЅРёСЋ РџРѕСЃС‚Р°РІС‰РёРєР° СѓСЃР»СѓРі
 
-        //выполняем поиск трубемого Поставщика
         new WebDriverWait(selenium, 3).until(ExpectedConditions.elementToBeClickable(searchInput));
         selenium.findElement(searchInput).sendKeys(request);
 
         if (pressEnter) {
-            //нажимаем ENTER, если требуется
+            //РЅР°Р¶РёРјР°РµРј ENTER, РµСЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ
             selenium.findElement(searchInput).sendKeys(Keys.ENTER);
 
         }
 
         if (checkPresence) {
-            //проверяем наличие искомого в выпадающем списке, убеждаемся, что он на первом месте
+            //РїСЂРѕРІРµСЂСЏРµРј РЅР°Р»РёС‡РёРµ РёСЃРєРѕРјРѕРіРѕ РІ РІС‹РїР°РґР°СЋС‰РµРј СЃРїРёСЃРєРµ, СѓР±РµР¶РґР°РµРјСЃСЏ, С‡С‚Рѕ РѕРЅ РЅР° РїРµСЂРІРѕРј РјРµСЃС‚Рµ
             new WebDriverWait(selenium, 3).until(ExpectedConditions.visibilityOfElementLocated(searchSuggestedDropdown));
-            new WebDriverWait(selenium, 3).until(ExpectedConditions.textToBePresentInElement(searchSuggestedDropdownFirstElement, zhkhLookingForName));
+            new WebDriverWait(selenium, 3).until(ExpectedConditions.textToBePresentInElementLocated(searchSuggestedDropdownFirstElement, zhkhLookingForName));
 
         }
 
         if (click) {
-            //кликаем по искомому
+            //РєР»РёРєР°РµРј РїРѕ РёСЃРєРѕРјРѕРјСѓ
             selenium.findElement(searchSuggestedDropdownFirstElement).click();
             new WebDriverWait(selenium, 3).until(ExpectedConditions.titleContains(request));
 
@@ -125,8 +138,10 @@ public class PaymentPage {
     }
 
 
-    public boolean elementIsNotPresent(String text){
-        //проверяем отсутствие элемента с искомым
+    public boolean elementIsNotPresent(String text) {
+        //РїСЂРѕРІРµСЂСЏРµРј РѕС‚СЃСѓС‚СЃС‚РІРёРµ СЌР»РµРјРµРЅС‚Р° СЃ РёСЃРєРѕРјС‹Рј
+        // text - С‚РµРєСЃС‚, РєРѕС‚РѕСЂРѕРіРѕ РЅРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ
+
         By xpath = By.xpath("//span[text()='" + text + "']");
 
         try {
