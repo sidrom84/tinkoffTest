@@ -4,7 +4,6 @@ import junit.framework.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.DataProvider;
@@ -21,6 +20,7 @@ public class ProviderPage {
     public By periodInput         = By.xpath("//div[contains(@class, 'ui-form__row_date')]/.//input[@id='period']");
     public By combinationInput    = By.xpath("//div[contains(@class, 'ui-form__row_combination')]/.//input");
     By errorMessageLabel   = By.xpath("//div[@data-qa-file='UIFormRowError']");
+    By payButton           = By.xpath("//button[@data-qa-file='UIButton']");
 
 
     public ProviderPage(WebDriver selenium) {
@@ -36,6 +36,11 @@ public class ProviderPage {
 
         new WebDriverWait(selenium, 3).until(ExpectedConditions.elementToBeClickable(zhkuPaymentPageTabs));
         selenium.findElement(zhkuPaymentPageTabs).findElement(By.linkText(tabName)).click();
+        new WebDriverWait(selenium, 3).until(ExpectedConditions.presenceOfElementLocated(payerCodeInput));
+        new WebDriverWait(selenium, 3).until(ExpectedConditions.presenceOfElementLocated(periodInput));
+        new WebDriverWait(selenium, 3).until(ExpectedConditions.presenceOfElementLocated(combinationInput));
+        new WebDriverWait(selenium, 3).until(ExpectedConditions.elementToBeClickable(payButton));
+
 
     }
 
@@ -94,7 +99,10 @@ public class ProviderPage {
         selenium.findElement(elementInput).sendKeys(text + Keys.ENTER);
         new WebDriverWait(selenium, 3).until(ExpectedConditions.elementToBeClickable(elementInput));
         Assert.assertEquals(3, selenium.findElements(errorMessageLabel).size());
-        Assert.assertEquals("Неверное сообщение об ошибке", messageText, selenium.findElements(errorMessageLabel).get(positionInput).getText());
+        Assert.assertEquals(
+                "Неверное сообщение об ошибке",
+                messageText, selenium.findElements(errorMessageLabel).get(positionInput).getText()
+        );
 
     }
 
