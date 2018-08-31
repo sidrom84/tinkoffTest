@@ -5,18 +5,20 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+
 /**
  * Created by sidrom on 29.08.2018.
  */
-public class CommonObjects {
-
-    private WebDriver selenium;
+public class CommonObjects extends Main{
 
     String pageTitle = "Tinkoff.ru: платежи и переводы денег";
 
-    public CommonObjects(WebDriver selenium) {
 
-        this.selenium = selenium;
+    public void goTo(String baseURL) {
+
+        selenium.navigate().to(baseURL);
+        new WebDriverWait(selenium, 3).until(ExpectedConditions.titleIs("Кредит наличными и кредитные карты онлайн"));
+        selenium.manage().window().maximize();
 
     }
 

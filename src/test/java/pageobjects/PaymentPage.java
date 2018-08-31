@@ -3,7 +3,6 @@ package pageobjects;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -11,9 +10,8 @@ import org.testng.Assert;
 /**
  * Created by sidrom on 29.08.2018.
  */
-public class PaymentPage {
+public class PaymentPage extends Main{
 
-    private WebDriver selenium;
 
     String paymentType;
     String[] regionsToSet = new String[]{"г. Москва", "г. Санкт-Петербург"};
@@ -28,13 +26,6 @@ public class PaymentPage {
     By searchInput = By.xpath("//input[@data-qa-file='SearchInput']");
     By searchSuggestedDropdown = By.xpath("//div[@data-qa-file='SearchSuggested']");
     By searchSuggestedDropdownFirstElement = By.xpath("//div[@data-qa-file='SearchSuggested']/..//div[@data-qa-node='Tag']");
-
-
-    public PaymentPage(WebDriver selenium) {
-
-        this.selenium = selenium;
-
-    }
 
 
     public void clickPaymentType(String paymentType) {

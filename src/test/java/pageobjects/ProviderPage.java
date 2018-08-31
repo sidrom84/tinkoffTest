@@ -3,7 +3,6 @@ package pageobjects;
 import junit.framework.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.DataProvider;
@@ -11,9 +10,8 @@ import org.testng.annotations.DataProvider;
 /**
  * Created by sidrom on 29.08.2018.
  */
-public class ProviderPage {
+public class ProviderPage extends Main {
 
-    private WebDriver selenium;
 
     By zhkuPaymentPageTabs = By.xpath("//div[@data-qa-file='SubscriptionProvider']/..//div[@data-qa-file='Tabs']");
     public By payerCodeInput      = By.xpath("//div[contains(@class, 'ui-form__row_text')]/.//input[@id='payerCode']");
@@ -21,13 +19,6 @@ public class ProviderPage {
     public By combinationInput    = By.xpath("//div[contains(@class, 'ui-form__row_combination')]/.//input");
     By errorMessageLabel   = By.xpath("//div[@data-qa-file='UIFormRowError']");
     By payButton           = By.xpath("//button[@data-qa-file='UIButton']");
-
-
-    public ProviderPage(WebDriver selenium) {
-
-        this.selenium = selenium;
-
-    }
 
 
     public void selectTab(String tabName){
@@ -40,7 +31,6 @@ public class ProviderPage {
         new WebDriverWait(selenium, 3).until(ExpectedConditions.presenceOfElementLocated(periodInput));
         new WebDriverWait(selenium, 3).until(ExpectedConditions.presenceOfElementLocated(combinationInput));
         new WebDriverWait(selenium, 3).until(ExpectedConditions.elementToBeClickable(payButton));
-
 
     }
 
@@ -58,6 +48,7 @@ public class ProviderPage {
                 {"<alert>000</alert>", "000", "Поле неправильно заполнено"}
         };
     }
+
 
     @DataProvider
     //набор данных для проверки поля Период

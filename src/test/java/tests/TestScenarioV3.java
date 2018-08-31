@@ -4,6 +4,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -12,8 +15,14 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import pageobjects.CommonObjects;
+import pageobjects.Main;
 import pageobjects.PaymentPage;
 import pageobjects.ProviderPage;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 
 /**
@@ -21,14 +30,12 @@ import pageobjects.ProviderPage;
  */
 public class TestScenarioV3 {
 
-    private WebDriver selenium;
+    Properties properts = new Properties();
 
-    String chromeBinary = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe";
-    String chromeDriver = "D:\\dev\\ChromeDriver\\chromedriver.exe";
-
-    private CommonObjects commonObjects;
-    private PaymentPage paymentPage;
-    private ProviderPage providerPage;
+    public CommonObjects commonObjects;
+    public PaymentPage paymentPage;
+    public ProviderPage providerPage;
+    public Main main;
 
     String baseURL          = "https://www.tinkoff.ru/";
     String[] regionsToSet   = new String[]{"г. Москва", "г. Санкт-Петербург"};
@@ -47,21 +54,17 @@ public class TestScenarioV3 {
     @BeforeSuite
     public void setUp() throws InterruptedException {
 
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.setBinary(chromeBinary);
-        System.setProperty("webdriver.chrome.driver", chromeDriver);
+        main = new Main();
+        commonObjects = new CommonObjects();
+        paymentPage = new PaymentPage();
+        providerPage = new ProviderPage();
 
-        selenium = new ChromeDriver();
-
-        commonObjects = new CommonObjects(selenium);
-        paymentPage = new PaymentPage(selenium);
-        providerPage = new ProviderPage(selenium);
+        //настраиваем браузер по конфигурации
+        main.setBrowser(properts);
 
 //        1 Переходом по адресу http://///..tink.ff/ загрузить стартовую страницу Titink ati.
         System.out.println("Переходим на главную страницу");
-        selenium.navigate().to(baseURL);
-        new WebDriverWait(selenium, 3).until(ExpectedConditions.titleIs("Кредит наличными и кредитные карты онлайн"));
-        selenium.manage().window().maximize();
+        commonObjects.goTo(baseURL);
 
 //        2 Из верхнего меню, нажатием на пункт меню “Платежи“, перейти на страницу “Платежи“.
         System.out.println("Нажимаем на пункт меню Платежи");
@@ -175,7 +178,7 @@ public class TestScenarioV3 {
     @AfterSuite
     public void tearDown(){
         //убираем за собой
-        selenium.quit();
+        main.closeAndQuit();
 
     }
 
